@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
+            --accent: #7c6af7; --accent-dim: #3d3580;
+            --text: #e2e4ed; --muted: #6b7088;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', sans-serif;
+        }
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; line-height: 1.6; }
+        header { border-bottom: 1px solid var(--border); padding: 1.2rem 0; position: sticky; top: 0; background: rgba(15,17,23,0.85); backdrop-filter: blur(12px); z-index: 10; }
+        .header-inner { max-width: 780px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 0.6rem; }
+        .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .logo-text { font-family: var(--mono); font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; }
+        .logo-text span { color: var(--accent); }
+        main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+        .section-label { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+        .write-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; transition: border-color 0.2s; }
+        .write-card:focus-within { border-color: var(--accent-dim); }
+        input[type="text"] { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-family: var(--sans); font-size: 1.15rem; font-weight: 600; padding: 0.4rem 0 0.8rem; margin-bottom: 1rem; outline: none; transition: border-color 0.2s; }
+        input[type="text"]::placeholder { color: var(--muted); font-weight: 400; }
+        input[type="text"]:focus { border-color: var(--accent); }
+        textarea { width: 100%; background: transparent; border: none; color: var(--text); font-family: var(--sans); font-size: 0.95rem; line-height: 1.7; resize: vertical; outline: none; min-height: 120px; }
+        textarea::placeholder { color: var(--muted); }
+        .form-footer { display: flex; justify-content: flex-end; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+        button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 0.55rem 1.3rem; font-family: var(--mono); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+        button:hover { opacity: 0.88; }
+        button:active { transform: scale(0.97); }
+        .post-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .post-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s, transform 0.15s; }
+        .post-item:hover { border-color: var(--accent-dim); transform: translateX(4px); }
+        .post-item a { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.2rem; text-decoration: none; color: inherit; gap: 1rem; }
+        .post-title { font-size: 0.95rem; font-weight: 500; }
+        .post-meta { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+        .post-arrow { color: var(--accent); font-size: 1rem; flex-shrink: 0; }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-family: var(--mono); font-size: 0.85rem; border: 1px dashed var(--border); border-radius: 10px; }
+        .empty-state::before { content: '// '; color: var(--accent); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo-dot"></div>
+            <span class="logo-text">dev<span>.</span>blog</span>
+        </div>
+    </header>
+    <main>
+        <p class="section-label">// new post</p>
+        <div class="write-card">
+            <form method="POST" action="/create">
+                <input type="text" name="title" placeholder="Post title..." required>
+                <textarea name="content" placeholder="Write something..." rows="5" required></textarea>
+                <div class="form-footer">
+                    <button type="submit">publish →</button>
+                </div>
+            </form>
+        </div>
+        <p class="section-label">// posts</p>
+        <ul class="post-list">
+            <% if (posts.length === 0) { %>
+                <li class="empty-state">no posts yet. write something.</li>
+            <% } else { %>
+                <% posts.forEach(post => { %>
+                    <li class="post-item">
+                        <a href="/post/<%= post.id %>">
+                            <span class="post-title"><%= post.title %></span>
+                            <span class="post-meta"><%= post.createdAt.toDateString() %></span>
+                            <span class="post-arrow">→</span>
+                        </a>
+                    </li>
+                <% }) %>
+            <% } %>
+        </ul>
+    </main>
+</body>
+</html>
